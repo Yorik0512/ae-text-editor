@@ -4,6 +4,7 @@
     <main>
       <ControlPanel/>
       <FileZone/>
+      <SynonymDialog/>
     </main>
   </div>
 </template>
@@ -12,13 +13,35 @@
 import ControlPanel from './components/ControlPanel'
 import FileZone from './components/FileZone'
 import Header from './components/Header'
+import SynonymDialog from './components/SynonymDialog'
+// Service import.
+import getMockText from './services/text.service';
 
 export default {
   name: 'App',
+  mounted: function () {
+    // Add Service data to global store.
+    getMockText().then(data => {
+      const textData = data.split(" ").map((item, key) => {
+        return {
+          key,
+          value: item,
+          'styles': {
+            'bold': false,
+            'italic': false,
+            'underlined': false,
+          }
+        };
+      });
+      this.$store.dispatch('addWords', textData);
+      return data;
+    });
+  },
   components: {
     Header,
     ControlPanel,
-    FileZone
+    FileZone,
+    SynonymDialog
   }
 }
 </script>
